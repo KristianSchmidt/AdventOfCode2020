@@ -19,12 +19,9 @@ let groups =
 
     loop data [] []
 
-let processedGroups =
+let maps =
     groups
     |> List.map (List.collect (fun s -> s.Split(' ') |> Array.toList))
-
-let maps =
-    processedGroups
     |> List.map (List.map (fun s -> (s.Split(':') |> Array.head, s.Split(':').[1])))
     |> List.map Map.ofList
 
