@@ -8,6 +8,12 @@ open System.IO
 open System.Collections.Generic
 open System.Net
 open System.Net.Http
+open System.Text.RegularExpressions
+
+let (|Regex|_|) pattern input =
+    let m = Regex.Match(input, pattern)
+    if m.Success then Some(List.tail [ for g in m.Groups -> g.Value ])
+    else None
 
 module Web =
     let getInput day =
@@ -23,6 +29,22 @@ module Web =
             File.WriteAllText(path, contents)
         
         File.ReadAllLines(path)
+
+[<AutoOpen>]
+module Vector =
+    type V(x: int, y : int) =
+        member _.x = x
+        member _.y = y
+        static member (~-) (v : V) =
+            V(-1 * v.x, -1 * v.y)
+        static member (*) (v : V, a) =
+            V(a * v.x, a * v.y)
+        static member (*) (a, v: V) =
+            V(a * v.x, a * v.y)
+        static member (+) (v1: V, v2: V) =
+            V(v1.x+v2.x, v1.y+v2.y)
+        member _.l1norm = abs x + abs y
+        override this.ToString() = $"({this.x},{this.y})"
 
 let permutations list =
     let rec permutations' list taken = 
