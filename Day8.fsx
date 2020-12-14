@@ -70,6 +70,6 @@ let newPrograms =
     replaceIdxes
     |> Array.map (replaceAt data)
 
-let ans2 = newPrograms |> Array.choose solve2
+let ans2 = newPrograms |> Array.choose solve2 |> Array.head
 
 ans2

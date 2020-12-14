@@ -56,6 +56,15 @@ let permutations list =
 
     permutations' list Set.empty
 
+let product (items : 'a list) count =
+    let rec f count acc =
+        match count with
+        | 0 -> acc
+        | _ -> let newAcc = items |> List.collect (fun i -> acc |> List.map (fun acc' -> i :: acc'))
+               f (count-1) newAcc
+
+    f count [[]]
+
 let rec gcd x y = if y = 0L then abs x else gcd y (x % y)
 
 let lcm x y = x * y / (gcd x y)
