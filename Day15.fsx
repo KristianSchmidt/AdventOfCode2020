@@ -16,7 +16,7 @@ let solve starting lastTurn =
 
         if (turn = lastTurn + 1) then
             printfn "Finished: %i" lastNum
-            state
+            lastNum
         else
             let newNum =
                 match Map.tryFind lastNum state with
@@ -40,7 +40,31 @@ ans1
 
 /// Part 2
 
-#time "on"
-let ans2 = solve data 30000000
+let solveFast starting lastTurn =
+    let arr1 = Array.init lastTurn (fun _ -> 0)
+    let arr2 = Array.init lastTurn (fun _ -> 0)
+    starting |> Array.iteri (fun i num -> arr2.[num] <- (i+1))
 
-ans2
+    let rec f lastNum turn =
+        if (turn = lastTurn + 1) then
+            lastNum
+        else
+            let newNum =
+                if (arr1.[lastNum] = 0) then
+                    0
+                else
+                    arr2.[lastNum] - arr1.[lastNum]
+
+            arr1.[newNum] <- arr2.[newNum]
+            arr2.[newNum] <- turn
+
+            f newNum (turn+1)
+
+    f (Array.last starting) (Array.length starting + 1)
+    
+#time "on"
+let ans2 = solve data 30_000_000
+
+let ans2Fast = solveFast data 30_000_000
+
+ans2, ans2Fast
