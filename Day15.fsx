@@ -61,10 +61,28 @@ let solveFast starting lastTurn =
             f newNum (turn+1)
 
     f (Array.last starting) (Array.length starting + 1)
+
+let solveFast2 starting lastTurn =
+    let spoken = Array.init lastTurn (fun _ -> 0)
+    starting |> Array.iteri (fun i num -> spoken.[num] <- (i+1))
+
+    let rec f lastNum turn =
+        if (turn = lastTurn + 1) then
+            lastNum
+        else
+            let spokenVal = spoken.[lastNum]
+            if (spokenVal <> 0) then
+                let newVal = turn - 1 - spokenVal
+                spoken.[lastNum] <- turn - 1
+                f newVal (turn+1)
+            else
+                spoken.[lastNum] <- turn - 1
+                f 0 (turn+1)
+
+    f (Array.last starting) (Array.length starting + 1)
     
 #time "on"
 let ans2 = solve data 30_000_000
 
-let ans2Fast = solveFast data 30_000_000
-
-ans2, ans2Fast
+let y = solveFast2 data 30_000_000
+let x = solveFast2 data 300_000_000
