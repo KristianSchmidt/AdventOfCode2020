@@ -18,7 +18,7 @@ let maxY = data |> Array.map (fst >> snd) |> Array.max
 
 let adj (x,y,z) =
     [|
-    (x-1,y+1,z+1); (x,y,  z+1);(x+1,y+1,z+1)
+    (x-1,y+1,z+1); (x,y+1,z+1);(x+1,y+1,z+1)
     (x-1,y,  z+1); (x,y,  z+1);(x+1,y,  z+1)
     (x-1,y-1,z+1); (x,y-1,z+1);(x+1,y-1,z+1);
 
@@ -46,11 +46,16 @@ let cycleCoord state (x,y,z) =
         |> Map.tryFind (x,y,z)
         |> Option.defaultValue '.'
 
+    //printfn $"Currstate: {currState}"
+    
     let neighbors =
         adj (x,y,z)
         |> Array.map (fun c -> Map.tryFind c state |> Option.defaultValue '.')
     
+    //printfn "Neigh: %A" neighbors
+    
     let activeNeighbors = neighbors |> Seq.filter ((=)'#') |> Seq.length
+    //printfn "active: %i" activeNeighbors
     match currState with
     | '#' when activeNeighbors = 2 || activeNeighbors = 3 ->
         '#'
@@ -102,6 +107,14 @@ let ans1 =
     |> Array.length
 
 
+solve data 1
+|> Map.filter (fun (x,y,z) c -> x = 1 && y = 0)
+
+let startState = data |> Array.map (fun ((x,y),c) -> (x,y,0),c) |> Map.ofArray
+
+cycleCoord startState (1,0,-1)
+
+adj (1,0,-1)
 ans1
 
 /// Part 2
