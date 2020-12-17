@@ -27,7 +27,7 @@ let cycleCoord adj state coord =
             
     let neighbors =
         adj coord
-        |> Array.map (fun c -> Map.tryFind c state |> Option.defaultValue '.')
+        |> Array.choose (fun c -> Map.tryFind c state)
         
     let activeNeighbors = neighbors |> Seq.filter ((=)'#') |> Seq.length
     
