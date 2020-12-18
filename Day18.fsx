@@ -7,8 +7,6 @@ Environment.CurrentDirectory <- __SOURCE_DIRECTORY__
 
 let data = Helpers.Web.getInput 18
 
-let ex = "1 + (2 * 3) + (4 * (5 + 6))".ToCharArray() |> Array.filter ((<>)' ')
-
 (*
 
 Can meet:
@@ -55,6 +53,78 @@ ans1
 
 /// Part 2
 
-let ans2 = data
+let rec solve2 s =
+    let newStr =
+        match s with
+        | Regex "(\d+) \+ (\d+)" [d1;d2] ->
+            let res = (int64 d1) + (int64 d2)
+            s.Replace($"{d1} + {d2}", string res)
+        | Regex "\((\d+)\)" [d1] ->
+            s.Replace($"({d1})", string d1)
+        | Regex "\((\d+) \* (\d+)\)" [d1;d2] ->
+            let res = (int64 d1) * (int64 d2)
+            s.Replace($"({d1} * {d2})", string res)
+        | Regex "\((\d+) \* (\d+) \* (\d+)\)" [d1;d2;d3] ->
+            let res = (int64 d1) * (int64 d2) * (int64 d3)
+            s.Replace($"({d1} * {d2} * {d3})", string res)
+        | Regex "\((\d+) \* (\d+) \* (\d+) \* (\d+)\)" [d1;d2;d3;d4] ->
+            let res =
+                (int64 d1) * (int64 d2) *
+                (int64 d3) * (int64 d4)
+            s.Replace($"({d1} * {d2} * {d3} * {d4})", string res)
+        | Regex "\((\d+) \* (\d+) \* (\d+) \* (\d+) \* (\d+)\)" [d1;d2;d3;d4;d5] ->
+            let res =
+                (int64 d1) * (int64 d2) *
+                (int64 d3) * (int64 d4) *
+                (int64 d5)
+            s.Replace($"({d1} * {d2} * {d3} * {d4} * {d5})", string res)
+        | Regex "\((\d+) \* (\d+) \* (\d+) \* (\d+) \* (\d+) \* (\d+)\)" [d1;d2;d3;d4;d5;d6] ->
+            let res =
+                (int64 d1) * (int64 d2) *
+                (int64 d3) * (int64 d4) *
+                (int64 d5) * (int64 d6)
+                
+            s.Replace($"({d1} * {d2} * {d3} * {d4} * {d5} * {d6})", string res)
+        | Regex "^(\d+) \* (\d+)$" [d1;d2] ->
+            let res = (int64 d1) * (int64 d2)
+            s.Replace($"{d1} * {d2}", string res)
+        | Regex "^(\d+) \* (\d+) \* (\d+)$" [d1;d2;d3] ->
+            let res = (int64 d1) * (int64 d2) * (int64 d3)
+            s.Replace($"{d1} * {d2} * {d3}", string res)
+        | Regex "^(\d+) \* (\d+) \* (\d+) \* (\d+)$" [d1;d2;d3;d4] ->
+            let res =
+                (int64 d1) * (int64 d2) *
+                (int64 d3) * (int64 d4)
+            s.Replace($"{d1} * {d2} * {d3} * {d4}", string res)
+        | Regex "^(\d+) \* (\d+) \* (\d+) \* (\d+) \* (\d+)$" [d1;d2;d3;d4;d5] ->
+            let res =
+                (int64 d1) * (int64 d2) *
+                (int64 d3) * (int64 d4) *
+                (int64 d5)
+            s.Replace($"{d1} * {d2} * {d3} * {d4} * {d5}", string res)
+        | Regex "^(\d+) \* (\d+) \* (\d+) \* (\d+) \* (\d+) \* (\d+)$" [d1;d2;d3;d4;d5;d6] ->
+            let res =
+                (int64 d1) * (int64 d2) *
+                (int64 d3) * (int64 d4) *
+                (int64 d5) * (int64 d6)
+            s.Replace($"{d1} * {d2} * {d3} * {d4} * {d5} * {d6}", string res)
+        
+        | _ -> s
+
+    if (newStr <> s) then
+        solve2 newStr
+    else
+        //printfn "%s" s
+        bigint.Parse(s)
+
+solve2 "1 + 2 * 3 + 4 * 5 + 6"
+
+solve2 "5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))"
+
+solve2 "((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2"
+
+solve2 "(2 * 11 * 5 * 8) * 6 + (6 * 7 * 12 * 28)"
+
+let ans2 = data |> Array.sumBy solve2
 
 ans2
