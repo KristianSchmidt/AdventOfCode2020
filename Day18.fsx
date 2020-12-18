@@ -1,6 +1,7 @@
 #load "Helpers.fsx"
 
 open System
+open System.Text.RegularExpressions
 open Helpers
 
 Environment.CurrentDirectory <- __SOURCE_DIRECTORY__
